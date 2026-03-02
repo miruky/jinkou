@@ -1,0 +1,446 @@
+:root {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --ink: #1f242c;
+  --ink-muted: #5c6571;
+  --line: #dee2e8;
+  --accent: #3d5a80;
+  --accent-ink: #ffffff;
+  --male: #5b87b5;
+  --female: #c97b7b;
+  --shadow: 0 1px 2px rgb(20 24 30 / 6%), 0 8px 24px rgb(20 24 30 / 7%);
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --bg: #14171c;
+  --surface: #1c2026;
+  --ink: #e7eaee;
+  --ink-muted: #98a2ae;
+  --line: #2f353d;
+  --accent: #7ea8d8;
+  --accent-ink: #10141a;
+  --male: #6f9cc9;
+  --female: #d49090;
+  --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 8px 24px rgb(0 0 0 / 35%);
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #14171c;
+    --surface: #1c2026;
+    --ink: #e7eaee;
+    --ink-muted: #98a2ae;
+    --line: #2f353d;
+    --accent: #7ea8d8;
+    --accent-ink: #10141a;
+    --male: #6f9cc9;
+    --female: #d49090;
+    --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 8px 24px rgb(0 0 0 / 35%);
+    color-scheme: dark;
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Hiragino Sans', 'Noto Sans JP', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* ---- ヘッダー ---- */
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  animation: rise-in 0.5s ease-out both;
+}
+
+.brand-mark {
+  width: 26px;
+  height: 26px;
+  align-self: center;
+  color: var(--accent);
+}
+
+.brand h1 {
+  font-size: 22px;
+  letter-spacing: 0.04em;
+}
+
+.tagline {
+  color: var(--ink-muted);
+  font-size: 13px;
+}
+
+/* ---- レイアウト ---- */
+
+.app-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 24px;
+  padding: 24px;
+  min-height: 0;
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  animation: rise-in 0.5s ease-out 0.08s both;
+}
+
+.pyramid {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 8px;
+  min-height: 420px;
+}
+
+.pyramid svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: rise-in 0.5s ease-out 0.16s both;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+.card h2 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-muted);
+  margin-bottom: 12px;
+}
+
+/* ---- 再生コントロール ---- */
+
+.transport {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px 16px;
+  box-shadow: var(--shadow);
+}
+
+#year-slider {
+  flex: 1;
+  accent-color: var(--accent);
+}
+
+#year-output {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  min-width: 64px;
+  text-align: right;
+}
+
+.speed-label {
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+
+#speed-select {
+  font: inherit;
+  font-size: 13px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  flex: none;
+  transition:
+    border-color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.icon-button:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.icon-button svg {
+  width: 18px;
+  height: 18px;
+}
+
+#play-button .icon-pause {
+  display: none;
+}
+
+#play-button.is-playing .icon-play {
+  display: none;
+}
+
+#play-button.is-playing .icon-pause {
+  display: block;
+}
+
+.text-button {
+  font: inherit;
+  font-size: 13px;
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.text-button:hover {
+  border-color: var(--accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---- 指標 ---- */
+
+.stats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stats div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.stats dt {
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+
+.stats dd {
+  font-size: 15px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.cohort-help,
+.note {
+  font-size: 12px;
+  color: var(--ink-muted);
+  line-height: 1.7;
+}
+
+.cohort-status {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 8px 0;
+  min-height: 1em;
+}
+
+#cohort-clear {
+  margin-top: 4px;
+}
+
+/* ---- ピラミッドSVG ---- */
+
+.jinkou-year {
+  font-size: 30px;
+  font-weight: 700;
+  fill: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.jinkou-grid-line {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.jinkou-grid-zero {
+  stroke: var(--ink-muted);
+}
+
+.jinkou-grid-label,
+.jinkou-legend-mark text {
+  font-size: 11px;
+  fill: var(--ink-muted);
+}
+
+.jinkou-age {
+  font-size: 10px;
+  fill: var(--ink-muted);
+}
+
+.jinkou-bar-male {
+  fill: var(--male);
+}
+
+.jinkou-bar-female {
+  fill: var(--female);
+}
+
+.jinkou-row {
+  cursor: pointer;
+}
+
+.jinkou-row-hit {
+  fill: transparent;
+}
+
+.jinkou-row:hover .jinkou-bar,
+.jinkou-row:focus-visible .jinkou-bar {
+  filter: brightness(1.12);
+}
+
+.jinkou-row:focus-visible {
+  outline: none;
+}
+
+.jinkou-row:focus-visible .jinkou-row-hit {
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  fill: none;
+}
+
+.jinkou-row.is-cohort .jinkou-bar {
+  stroke: var(--accent);
+  stroke-width: 2.5;
+}
+
+.jinkou-row.is-cohort .jinkou-age {
+  fill: var(--accent);
+  font-weight: 700;
+}
+
+/* ---- フッター ---- */
+
+.app-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-muted);
+  font-size: 12px;
+}
+
+/* ---- テーマアイコン ---- */
+
+.icon-moon {
+  display: none;
+}
+
+[data-theme='dark'] .icon-sun {
+  display: none;
+}
+
+[data-theme='dark'] .icon-moon {
+  display: block;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .icon-sun {
+    display: none;
+  }
+
+  :root:not([data-theme='light']) .icon-moon {
+    display: block;
+  }
+}
+
+/* ---- アニメーション ---- */
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* ---- モバイル ---- */
+
+@media (max-width: 880px) {
+  .app-main {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+
+  .pyramid {
+    min-height: 55vh;
+  }
+
+  .tagline {
+    display: none;
+  }
+
+  .transport {
+    flex-wrap: wrap;
+  }
+}
+
+/* ---- モーション抑制 ---- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
