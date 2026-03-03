@@ -79,6 +79,12 @@
             <option value="10">はやい</option>
           </select>
         </div>
+        <div class="year-jumps" role="group" aria-label="主要年へ移動">
+          <button type="button" data-year="1950">1950年 戦後</button>
+          <button type="button" data-year="1990">1990年 バブル期</button>
+          <button type="button" data-year="2025">2025年 現在</button>
+          <button type="button" data-year="2070">2070年 推計末</button>
+        </div>
       </section>
 
       <aside class="panel">
@@ -104,6 +110,14 @@
             <div>
               <dt>老年人口指数</dt>
               <dd id="stat-dependency">-</dd>
+            </div>
+            <div>
+              <dt>従属人口指数</dt>
+              <dd id="stat-total-dependency">-</dd>
+            </div>
+            <div>
+              <dt>中位年齢</dt>
+              <dd id="stat-median">-</dd>
             </div>
           </dl>
         </section>
