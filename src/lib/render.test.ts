@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { AXIS_MAX, LAYOUT, barRect, renderPyramid, rowTitle } from './render';
+import { AXIS_MAX, LAYOUT, barRect, renderPyramid, renderReference, rowTitle } from './render';
 import { interpolateSnapshot, projectSeries } from './model';
 
 const series = projectSeries();
@@ -51,5 +51,25 @@ describe('renderPyramid', () => {
         expect(v).toBeLessThanOrEqual(AXIS_MAX);
       }
     }
+  });
+
+  it('空のreferenceグループを持つ', () => {
+    expect(svg).toContain('<g class="jinkou-reference" aria-hidden="true"></g>');
+  });
+});
+
+describe('renderReference', () => {
+  it('塗りなしの輪郭rectを参照年から描く', () => {
+    const ref = renderReference(snap2020);
+    const bars = ref.match(/class="jinkou-ref-bar"/g) ?? [];
+    // 人口のある階級ぶんの輪郭(男女)。0埋めの100+などは省くので42本未満
+    expect(bars.length).toBeGreaterThan(20);
+    expect(bars.length).toBeLessThanOrEqual(42);
+    expect(ref).not.toContain('fill=');
+  });
+
+  it('幅1px未満の階級は省く', () => {
+    const empty = { year: 2000, male: new Array<number>(21).fill(0), female: new Array<number>(21).fill(0) };
+    expect(renderReference(empty)).toBe('');
   });
 });
