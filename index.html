@@ -79,11 +79,22 @@
             <option value="10">はやい</option>
           </select>
         </div>
-        <div class="year-jumps" role="group" aria-label="主要年へ移動">
-          <button type="button" data-year="1950">1950年 戦後</button>
-          <button type="button" data-year="1990">1990年 バブル期</button>
-          <button type="button" data-year="2025">2025年 現在</button>
-          <button type="button" data-year="2070">2070年 推計末</button>
+        <div class="stage-controls">
+          <div class="year-jumps" role="group" aria-label="主要年へ移動">
+            <button type="button" data-year="1950">1950年 戦後</button>
+            <button type="button" data-year="1990">1990年 バブル期</button>
+            <button type="button" data-year="2025">2025年 現在</button>
+            <button type="button" data-year="2070">2070年 推計末</button>
+          </div>
+          <div class="compare">
+            <label for="ref-select">比較</label>
+            <select id="ref-select" aria-label="比較する参照年">
+              <option value="">なし</option>
+              <option value="1950">1950年</option>
+              <option value="1990">1990年</option>
+              <option value="2025">2025年</option>
+            </select>
+          </div>
         </div>
       </section>
 

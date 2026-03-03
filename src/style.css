@@ -278,11 +278,46 @@ select {
   display: block;
 }
 
+.stage-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
 /* 主要年への素早い移動 */
 .year-jumps {
   display: flex;
   flex-wrap: wrap;
   gap: 7px;
+}
+
+.compare {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.compare select {
+  font-size: 13px;
+  letter-spacing: normal;
+  text-transform: none;
+  padding: 6px 9px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.18s ease;
+}
+
+.compare select:hover {
+  border-color: var(--accent);
 }
 
 .year-jumps button {
@@ -415,6 +450,22 @@ select {
 
 .jinkou-bar-female {
   fill: var(--female);
+}
+
+/* 比較する参照年の輪郭。塗らずに破線の枠だけ重ねる */
+.jinkou-ref-bar {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.3;
+  stroke-dasharray: 3 2.5;
+  opacity: 0.55;
+  animation: ref-in 0.4s ease-out both;
+}
+
+@keyframes ref-in {
+  from {
+    opacity: 0;
+  }
 }
 
 .jinkou-row {
