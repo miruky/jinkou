@@ -11,7 +11,7 @@ export {
   mortalityRate,
   projectSeries,
 } from './model';
-export { snapshotStats, formatPopulation, formatShare } from './stats';
+export { snapshotStats, medianAge, formatPopulation, formatShare, formatAge } from './stats';
 export type { SnapshotStats } from './stats';
 export { AXIS_MAX, LAYOUT, barRect, renderPyramid, rowTitle, rowY } from './render';
 export type { RenderOptions } from './render';
