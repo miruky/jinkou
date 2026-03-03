@@ -100,6 +100,28 @@ export function renderPyramid(snapshot: PyramidSnapshot, options: RenderOptions 
     `<text x="808" y="32">女性</text>` +
     `</g>` +
     `<g class="jinkou-rows">${rows.join('')}</g>` +
+    `<g class="jinkou-reference" aria-hidden="true"></g>` +
     `</svg>`
   );
+}
+
+/**
+ * 比較用の参照年を、各階級の到達幅を示す輪郭(塗りなし)として描く。
+ * 現在の年の棒に重ねると、年をまたいだ各階級の増減が一目で分かる。
+ * 人口が無視できる(描画幅が1px未満の)階級は省く。
+ */
+export function renderReference(snapshot: PyramidSnapshot): string {
+  const parts: string[] = [];
+  for (let bin = 0; bin < AGE_LABELS.length; bin++) {
+    const y = rowY(bin);
+    for (const sex of ['male', 'female'] as const) {
+      const r = barRect(snapshot[sex][bin]!, sex);
+      if (r.width < 1) continue;
+      parts.push(
+        `<rect class="jinkou-ref-bar" x="${r.x.toFixed(2)}" y="${y}" ` +
+          `width="${r.width.toFixed(2)}" height="${LAYOUT.barHeight}"/>`,
+      );
+    }
+  }
+  return parts.join('');
 }
