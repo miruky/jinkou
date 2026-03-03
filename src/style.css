@@ -1,43 +1,50 @@
 :root {
-  --bg: #f5f6f8;
-  --surface: #ffffff;
-  --ink: #1f242c;
-  --ink-muted: #5c6571;
-  --line: #dee2e8;
-  --accent: #3d5a80;
-  --accent-ink: #ffffff;
-  --male: #5b87b5;
-  --female: #c97b7b;
-  --shadow: 0 1px 2px rgb(20 24 30 / 6%), 0 8px 24px rgb(20 24 30 / 7%);
+  /* 温度のある中立色。純白を避けた紙のような地色に、単一アクセントの藍 */
+  --bg: #ece9e3;
+  --surface: #f7f5f0;
+  --ink: #23211d;
+  --ink-muted: #6e6a61;
+  --line: #d9d4c9;
+  --line-soft: #e7e3d9;
+  --accent: #34436b;
+  --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
+  --accent-ink: #f7f5f0;
+  /* 男女は系列データの色。地色になじむ低彩度に寄せる */
+  --male: #4f7da6;
+  --female: #b56b60;
+  --font-sans: 'Hiragino Sans', 'Noto Sans JP', system-ui, sans-serif;
+  --font-serif: 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', Georgia, serif;
   color-scheme: light;
 }
 
 [data-theme='dark'] {
-  --bg: #14171c;
-  --surface: #1c2026;
-  --ink: #e7eaee;
-  --ink-muted: #98a2ae;
-  --line: #2f353d;
-  --accent: #7ea8d8;
-  --accent-ink: #10141a;
+  --bg: #15171b;
+  --surface: #1b1e23;
+  --ink: #e8e8e2;
+  --ink-muted: #9a988f;
+  --line: #2f333a;
+  --line-soft: #23262c;
+  --accent: #93a9da;
+  --accent-soft: color-mix(in srgb, var(--accent) 22%, transparent);
+  --accent-ink: #14161b;
   --male: #6f9cc9;
-  --female: #d49090;
-  --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 8px 24px rgb(0 0 0 / 35%);
+  --female: #cf8b80;
   color-scheme: dark;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --bg: #14171c;
-    --surface: #1c2026;
-    --ink: #e7eaee;
-    --ink-muted: #98a2ae;
-    --line: #2f353d;
-    --accent: #7ea8d8;
-    --accent-ink: #10141a;
+    --bg: #15171b;
+    --surface: #1b1e23;
+    --ink: #e8e8e2;
+    --ink-muted: #9a988f;
+    --line: #2f333a;
+    --line-soft: #23262c;
+    --accent: #93a9da;
+    --accent-soft: color-mix(in srgb, var(--accent) 22%, transparent);
+    --accent-ink: #14161b;
     --male: #6f9cc9;
-    --female: #d49090;
-    --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 8px 24px rgb(0 0 0 / 35%);
+    --female: #cf8b80;
     color-scheme: dark;
   }
 }
@@ -54,14 +61,30 @@ body {
 }
 
 body {
-  font-family: 'Hiragino Sans', 'Noto Sans JP', system-ui, sans-serif;
+  font-family: var(--font-sans);
+  font-feature-settings: 'palt' 1;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
   background: var(--bg);
   color: var(--ink);
   display: flex;
   flex-direction: column;
+  -webkit-font-smoothing: antialiased;
   transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+    background-color 0.4s ease,
+    color 0.4s ease;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
 /* ---- ヘッダー ---- */
@@ -71,15 +94,15 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 16px 24px;
+  padding: 20px 32px;
   border-bottom: 1px solid var(--line);
 }
 
 .brand {
   display: flex;
   align-items: baseline;
-  gap: 12px;
-  animation: rise-in 0.5s ease-out both;
+  gap: 14px;
+  animation: rise-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .brand-mark {
@@ -90,8 +113,10 @@ body {
 }
 
 .brand h1 {
-  font-size: 22px;
-  letter-spacing: 0.04em;
+  font-family: var(--font-serif);
+  font-size: 25px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .tagline {
@@ -104,28 +129,27 @@ body {
 .app-main {
   flex: 1;
   display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 24px;
-  padding: 24px;
+  grid-template-columns: minmax(0, 1fr) 312px;
+  gap: 40px;
+  padding: 32px;
   min-height: 0;
 }
 
 .stage {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
   min-width: 0;
-  animation: rise-in 0.5s ease-out 0.08s both;
+  min-height: 0;
+  animation: rise-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.06s both;
 }
 
 .pyramid {
   flex: 1;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 16px;
-  box-shadow: var(--shadow);
-  padding: 8px;
-  min-height: 420px;
+  padding: 12px 16px;
+  min-height: 320px;
 }
 
 .pyramid svg {
@@ -134,26 +158,30 @@ body {
   display: block;
 }
 
+/* 右の指標は箱に入れず、罫線と余白で段を分ける */
 .panel {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  animation: rise-in 0.5s ease-out 0.16s both;
+  border-left: 1px solid var(--line);
+  padding-left: 28px;
+  animation: rise-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
 }
 
 .card {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 16px;
-  box-shadow: var(--shadow);
+  padding: 22px 0;
+  border-top: 1px solid var(--line);
+}
+
+.card:first-child {
+  padding-top: 4px;
+  border-top: none;
 }
 
 .card h2 {
-  font-size: 13px;
+  font-family: var(--font-serif);
+  font-size: 16px;
   font-weight: 600;
-  color: var(--ink-muted);
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 /* ---- 再生コントロール ---- */
@@ -161,61 +189,76 @@ body {
 .transport {
   display: flex;
   align-items: center;
-  gap: 12px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 12px 16px;
-  box-shadow: var(--shadow);
+  gap: 16px;
+  padding: 14px 4px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
 }
 
 #year-slider {
   flex: 1;
   accent-color: var(--accent);
+  cursor: pointer;
 }
 
 #year-output {
+  font-family: var(--font-serif);
   font-variant-numeric: tabular-nums;
+  font-size: 18px;
   font-weight: 600;
-  min-width: 64px;
+  min-width: 72px;
   text-align: right;
 }
 
 .speed-label {
-  font-size: 12px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--ink-muted);
 }
 
 #speed-select {
-  font: inherit;
   font-size: 13px;
-  padding: 6px 8px;
+  padding: 7px 9px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 4px;
   background: var(--surface);
   color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.18s ease;
+}
+
+#speed-select:hover {
+  border-color: var(--accent);
 }
 
 .icon-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 4px;
   background: var(--surface);
   color: var(--ink);
   cursor: pointer;
   flex: none;
   transition:
-    border-color 0.2s ease,
-    transform 0.15s ease;
+    border-color 0.18s ease,
+    transform 0.18s ease,
+    background-color 0.18s ease;
 }
 
 .icon-button:hover {
   border-color: var(--accent);
   transform: translateY(-1px);
+}
+
+#play-button:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
 }
 
 .icon-button svg {
@@ -235,25 +278,48 @@ body {
   display: block;
 }
 
+/* 主要年への素早い移動 */
+.year-jumps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.year-jumps button {
+  padding: 5px 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-muted);
+  cursor: pointer;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  transition:
+    border-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.year-jumps button:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
 .text-button {
-  font: inherit;
-  font-size: 13px;
+  font-size: 12px;
   padding: 6px 12px;
   border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--surface);
-  color: var(--ink);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ink-muted);
   cursor: pointer;
-  transition: border-color 0.2s ease;
+  transition:
+    border-color 0.18s ease,
+    color 0.18s ease;
 }
 
 .text-button:hover {
   border-color: var(--accent);
-}
-
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  color: var(--ink);
 }
 
 /* ---- 指標 ---- */
@@ -261,14 +327,20 @@ body {
 .stats {
   display: flex;
   flex-direction: column;
-  gap: 8px;
 }
 
 .stats div {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  gap: 8px;
+  gap: 12px;
+  padding: 9px 0;
+  border-top: 1px solid var(--line-soft);
+}
+
+.stats div:first-child {
+  border-top: none;
+  padding-top: 0;
 }
 
 .stats dt {
@@ -277,34 +349,37 @@ body {
 }
 
 .stats dd {
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .cohort-help,
 .note {
   font-size: 12px;
   color: var(--ink-muted);
-  line-height: 1.7;
+  line-height: 1.8;
 }
 
 .cohort-status {
   font-size: 13px;
   font-weight: 600;
-  margin: 8px 0;
+  margin: 10px 0;
   min-height: 1em;
+  color: var(--accent);
 }
 
 #cohort-clear {
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 /* ---- ピラミッドSVG ---- */
 
 .jinkou-year {
-  font-size: 30px;
-  font-weight: 700;
+  font-family: var(--font-serif);
+  font-size: 34px;
+  font-weight: 600;
   fill: var(--ink);
   font-variant-numeric: tabular-nums;
 }
@@ -327,6 +402,11 @@ body {
 .jinkou-age {
   font-size: 10px;
   fill: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.jinkou-bar {
+  transition: fill 0.18s ease;
 }
 
 .jinkou-bar-male {
@@ -347,7 +427,7 @@ body {
 
 .jinkou-row:hover .jinkou-bar,
 .jinkou-row:focus-visible .jinkou-bar {
-  filter: brightness(1.12);
+  filter: brightness(1.1);
 }
 
 .jinkou-row:focus-visible {
@@ -373,10 +453,15 @@ body {
 /* ---- フッター ---- */
 
 .app-footer {
-  padding: 16px 24px;
+  padding: 18px 32px;
   border-top: 1px solid var(--line);
   color: var(--ink-muted);
-  font-size: 12px;
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+.app-footer p {
+  max-width: 78ch;
 }
 
 /* ---- テーマアイコン ---- */
@@ -408,28 +493,44 @@ body {
 @keyframes rise-in {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(10px);
   }
 }
 
 /* ---- モバイル ---- */
 
 @media (max-width: 880px) {
+  .app-header {
+    padding: 16px 20px;
+  }
+
   .app-main {
     grid-template-columns: 1fr;
-    padding: 16px;
+    gap: 28px;
+    padding: 20px;
   }
 
   .pyramid {
-    min-height: 55vh;
+    min-height: 56vh;
   }
 
   .tagline {
     display: none;
   }
 
+  .panel {
+    border-left: none;
+    border-top: 1px solid var(--line);
+    padding-left: 0;
+    padding-top: 8px;
+  }
+
   .transport {
     flex-wrap: wrap;
+  }
+
+  .app-footer {
+    padding: 16px 20px;
   }
 }
 
