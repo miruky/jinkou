@@ -13,7 +13,7 @@ export {
 } from './model';
 export { snapshotStats, medianAge, formatPopulation, formatShare, formatAge } from './stats';
 export type { SnapshotStats } from './stats';
-export { AXIS_MAX, LAYOUT, barRect, renderPyramid, rowTitle, rowY } from './render';
+export { AXIS_MAX, LAYOUT, barRect, renderPyramid, renderReference, rowTitle, rowY } from './render';
 export type { RenderOptions } from './render';
 export { BIN_COUNT } from './types';
 export type { PyramidSeries, PyramidSnapshot, Sex } from './types';
