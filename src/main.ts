@@ -5,6 +5,7 @@ import {
   binOfCohort,
   barRect,
   cohortStartOf,
+  formatAge,
   formatPopulation,
   formatShare,
   interpolateSnapshot,
@@ -30,6 +31,8 @@ const statEls = {
   working: document.getElementById('stat-working')!,
   elderly: document.getElementById('stat-elderly')!,
   dependency: document.getElementById('stat-dependency')!,
+  totalDependency: document.getElementById('stat-total-dependency')!,
+  median: document.getElementById('stat-median')!,
 };
 
 let year = START_YEAR;
@@ -75,6 +78,8 @@ function update(): void {
   statEls.working.textContent = formatShare(stats.workingShare);
   statEls.elderly.textContent = formatShare(stats.elderlyShare);
   statEls.dependency.textContent = stats.agedDependency.toFixed(2);
+  statEls.totalDependency.textContent = stats.totalDependency.toFixed(2);
+  statEls.median.textContent = formatAge(stats.medianAge);
 }
 
 function writeHash(): void {
@@ -123,6 +128,30 @@ slider.addEventListener('input', () => {
 });
 
 slider.addEventListener('change', writeHash);
+
+function goToYear(next: number): void {
+  setPlaying(false);
+  year = Math.min(END_YEAR, Math.max(START_YEAR, next));
+  update();
+  writeHash();
+}
+
+document.querySelectorAll<HTMLButtonElement>('.year-jumps [data-year]').forEach((button) => {
+  button.addEventListener('click', () => goToYear(Number(button.dataset.year)));
+});
+
+// 矢印キーで1年ずつ、スペースで再生/一時停止(入力欄では無効)
+document.addEventListener('keydown', (e) => {
+  const tag = (e.target as HTMLElement).tagName;
+  if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+    e.preventDefault();
+    goToYear(Math.round(year) + (e.key === 'ArrowRight' ? 1 : -1));
+  } else if (e.key === ' ' && tag !== 'BUTTON') {
+    e.preventDefault();
+    setPlaying(!playing);
+  }
+});
 
 // ---- コーホート追跡 ----
 
