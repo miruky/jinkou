@@ -11,6 +11,7 @@ import {
   interpolateSnapshot,
   projectSeries,
   renderPyramid,
+  renderReference,
   rowTitle,
   snapshotStats,
 } from './lib';
@@ -38,9 +39,13 @@ const statEls = {
 let year = START_YEAR;
 let playing = false;
 let cohortStart: number | null = null;
+let refYear: number | null = null;
+
+const refSelect = document.getElementById('ref-select') as HTMLSelectElement;
 
 pyramidHost.innerHTML = renderPyramid(interpolateSnapshot(series, year));
 const svg = pyramidHost.querySelector('svg')!;
+const referenceGroup = svg.querySelector('.jinkou-reference')!;
 const yearText = svg.querySelector('.jinkou-year')!;
 const rows = [...svg.querySelectorAll<SVGGElement>('.jinkou-row')];
 const bars = new Map(
@@ -85,13 +90,33 @@ function update(): void {
 function writeHash(): void {
   const parts = [`y=${Math.round(year)}`];
   if (cohortStart != null) parts.push(`c=${cohortStart}`);
+  if (refYear != null) parts.push(`r=${refYear}`);
   history.replaceState(null, '', `#${parts.join('&')}`);
 }
+
+// ---- 比較する参照年 ----
+
+function setReference(value: number | null): void {
+  refYear = value;
+  referenceGroup.innerHTML =
+    value == null ? '' : renderReference(interpolateSnapshot(series, value));
+  writeHash();
+}
+
+refSelect.addEventListener('change', () => {
+  setReference(refSelect.value === '' ? null : Number(refSelect.value));
+});
 
 // ---- 再生 ----
 
 let frameId = 0;
+let tweenId = 0;
 let lastTime = 0;
+
+function stopTween(): void {
+  cancelAnimationFrame(tweenId);
+  tweenId = 0;
+}
 
 function tick(time: number): void {
   if (!playing) return;
@@ -111,6 +136,7 @@ function setPlaying(next: boolean): void {
   playButton.classList.toggle('is-playing', next);
   playButton.setAttribute('aria-label', next ? '一時停止' : '再生');
   if (next) {
+    stopTween();
     if (year >= END_YEAR) year = START_YEAR;
     lastTime = performance.now();
     frameId = requestAnimationFrame(tick);
@@ -123,21 +149,58 @@ function setPlaying(next: boolean): void {
 playButton.addEventListener('click', () => setPlaying(!playing));
 
 slider.addEventListener('input', () => {
+  setPlaying(false);
+  stopTween();
   year = Number(slider.value);
   update();
 });
 
 slider.addEventListener('change', writeHash);
 
+const clampYear = (v: number) => Math.min(END_YEAR, Math.max(START_YEAR, v));
+
+/** 即座に指定年へ移動する(矢印キーなど1年送り向け) */
 function goToYear(next: number): void {
   setPlaying(false);
-  year = Math.min(END_YEAR, Math.max(START_YEAR, next));
+  stopTween();
+  year = clampYear(next);
   update();
   writeHash();
 }
 
+/** 指定年へ滑らかに送る(主要年ジャンプ向け)。reduced-motionでは即時 */
+function animateToYear(target: number): void {
+  setPlaying(false);
+  stopTween();
+  const goal = clampYear(target);
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    year = goal;
+    update();
+    writeHash();
+    return;
+  }
+  const from = year;
+  const start = performance.now();
+  const duration = 650;
+  const step = (now: number): void => {
+    const k = Math.min(1, (now - start) / duration);
+    const eased = 1 - Math.pow(1 - k, 3);
+    year = from + (goal - from) * eased;
+    update();
+    if (k < 1) {
+      tweenId = requestAnimationFrame(step);
+    } else {
+      tweenId = 0;
+      year = goal;
+      update();
+      writeHash();
+    }
+  };
+  tweenId = requestAnimationFrame(step);
+}
+
 document.querySelectorAll<HTMLButtonElement>('.year-jumps [data-year]').forEach((button) => {
-  button.addEventListener('click', () => goToYear(Number(button.dataset.year)));
+  button.addEventListener('click', () => animateToYear(Number(button.dataset.year)));
 });
 
 // 矢印キーで1年ずつ、スペースで再生/一時停止(入力欄では無効)
@@ -207,7 +270,7 @@ themeToggle.addEventListener('click', () => {
 
 applyTheme(localStorage.getItem(THEME_KEY));
 
-// ---- URLハッシュ復元(#y=2020&c=1945) ----
+// ---- URLハッシュ復元(#y=2020&c=1945&r=1950) ----
 
 const params = new URLSearchParams(location.hash.slice(1));
 const hashYear = Number(params.get('y'));
@@ -219,6 +282,12 @@ if (params.has('c') && Number.isFinite(hashCohort)) {
   cohortStart = hashCohort;
   cohortClear.hidden = false;
   cohortStatus.textContent = `${hashCohort}年から${hashCohort + 5}年に生まれた世代を追跡中`;
+}
+const hashRef = Number(params.get('r'));
+if (params.has('r') && Number.isFinite(hashRef) && hashRef >= START_YEAR && hashRef <= END_YEAR) {
+  refYear = hashRef;
+  refSelect.value = String(hashRef);
+  referenceGroup.innerHTML = renderReference(interpolateSnapshot(series, hashRef));
 }
 
 update();
